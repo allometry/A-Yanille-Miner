@@ -22,7 +22,8 @@ import com.quirlion.script.types.Location;
 import com.quirlion.script.types.Thing;
 
 public class AYanilleMiner extends Script {
-	private int bankBoothID = 2213, minedIron = 0, minedGems = 0;
+	private int bankBoothID = 2213;
+	private long minedIron = 0, minedGems = 0;
 	private int[] ironIDs = { 37307, 37308, 37309 };
 		
 	private Location[] yanilleMinePath = {
@@ -31,7 +32,8 @@ public class AYanilleMiner extends Script {
 		new Location(2615, 3104),
 		new Location(2620, 3116),
 		new Location(2623, 3133),
-		new Location(2626, 3146)
+		new Location(2626, 3146),
+		new Location(2626, 3149)
 	};
 	
 	private Area yanilleBank = new Area(new Location(2613, 3097), new Location(2609, 3088));
