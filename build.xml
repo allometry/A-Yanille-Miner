@@ -1,8 +1,8 @@
 <project name="A. Worker ANT" default="package">
 	<property name="JAR.name" value="AYanilleMiner.jar" />
 	
-	<property name="QUIRLION.username" value="allometry" />
-	<property name="QUIRLION.password" value="92852e2593f55fa48ecf063be26f3aeb" />
+	<property name="QUIRLION.username" value="" />
+	<property name="QUIRLION.password" value="" />
 	<property name="QUIRLION.script_description" value="A Yanille Miner" />
 	<property name="QUIRLION.script_category" value="Mining" />
 	
