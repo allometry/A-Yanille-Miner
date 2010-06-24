@@ -1,3 +1,13 @@
+<!--
+	Allomery Worker ANT
+	JAR packaging script and CURL upload tailored for Quirlion
+	
+	Copyright 2010, Steven Jabour
+	
+	License: Creative Commons Attribution 3.0
+	http://creativecommons.org/licenses/by/3.0/
+-->
+
 <project name="A. Worker ANT" default="package">
 	<!-- START: Configuration -->
 	
