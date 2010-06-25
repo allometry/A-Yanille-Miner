@@ -79,7 +79,6 @@ public class AYanilleMiner extends Script {
 	
 	public int loop() {
 		if(players.getCurrent().isInArea(yanilleMine) && !inventory.isFull()) {
-			log("Player is at the Yanille Mine");
 			Thing currentRock = things.getNearest(ironIDs);
 			
 			Location currentRockLocation = currentRock.getLocation();
@@ -89,23 +88,24 @@ public class AYanilleMiner extends Script {
 			if(currentRock.click()) {
 				boolean failsafe = false;
 				long failsafeTime = System.currentTimeMillis() + 4500;
-				while(!thingIdChanged(ironIDs, things.getAt(currentRockLocation).getID()) && !failsafe) {
-					if(failsafeTime <= System.currentTimeMillis()) failsafe = true;
-				}
+				
+				try {
+					while(!thingIdChanged(ironIDs, things.getAt(currentRockLocation).getID()) && !failsafe) {
+						if(failsafeTime <= System.currentTimeMillis()) failsafe = true;
+					}
+				} catch(Exception e) {}
 			}
 		}
 		
 		if(inventory.isFull() && !players.getCurrent().isInArea(yanilleBank)) {
 			walker.walkPathMM(Location.reversePath(yanilleMinePath));
 			
-			log("Walking to bank...");
 			return random(3000, 4000);
 		}
 		
 		if(!inventory.isFull() && !players.getCurrent().isInArea(yanilleMine)) {
 			walker.walkPathMM(yanilleMinePath);
 			
-			log("Walking to mine...");
 			return random(3000, 4000);
 		}
 		
@@ -141,7 +141,7 @@ public class AYanilleMiner extends Script {
 		return true;
 	}
 	
-	public void serverMessageReceived(String message) {
+	public void chatMessageReceived(String username, String message) {		
 		if(message.contains("iron")) minedIron++;
 		if(message.contains("sapphire")) minedGems++;
 		if(message.contains("emerald")) minedGems++;
