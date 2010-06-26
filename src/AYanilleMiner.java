@@ -73,8 +73,25 @@ public class AYanilleMiner extends Script {
 			"TknOeY9dlIw5kVcrMG/8XpoQgCEkOhwNNJn5i7bFSrFDpsCrFEIPpLacr0WxpibYIQpS86/8pMBqNswnJ6XSivqHBv3R3pmbxzgwz" +
 			"4Z+EaTXtwqIogrzjxIJ4QVVV1UyihxgjFv3/K09Bu/lEkBgg5rLZH+fT5dvfn7iFAAAAAElFTkSuQmCC";
 	
+	Image basketImage, rubyImage, clockImage;
+	
 	public void onStart() {
 		startTime = System.currentTimeMillis();
+		
+		try {
+			byte[] basketBytes = new BASE64Decoder().decodeBuffer(basketPNG);
+			byte[] rubyBytes = new BASE64Decoder().decodeBuffer(rubyPNG);
+			byte[] clockBytes = new BASE64Decoder().decodeBuffer(clockPNG);
+			
+			InputStream stream = new ByteArrayInputStream(basketBytes);
+			basketImage = ImageIO.read(stream);
+			
+			stream = new ByteArrayInputStream(rubyBytes);
+			rubyImage = ImageIO.read(stream);
+			
+			stream = new ByteArrayInputStream(clockBytes);
+			clockImage = ImageIO.read(stream);
+		} catch(IOException e) {}
 	}
 	
 	public int loop() {
@@ -194,27 +211,11 @@ public class AYanilleMiner extends Script {
 		g.drawString(millisToClock(System.currentTimeMillis() - startTime), interfaces.getMinimap().getRealX() - 139, 37);
 		
 		//Images
-		try {
-			byte[] basketBytes = new BASE64Decoder().decodeBuffer(basketPNG);
-			byte[] rubyBytes = new BASE64Decoder().decodeBuffer(rubyPNG);
-			byte[] clockBytes = new BASE64Decoder().decodeBuffer(clockPNG);
-			
-			InputStream stream = new ByteArrayInputStream(basketBytes);
-			Image basketImage = ImageIO.read(stream);
-			
-			stream = new ByteArrayInputStream(rubyBytes);
-			Image rubyImage = ImageIO.read(stream);
-			
-			stream = new ByteArrayInputStream(clockBytes);
-			Image clockImage = ImageIO.read(stream);
-			
-			ImageObserver observer = null;
-			g.drawImage(basketImage, 25, 25, observer);
-			g.drawImage(rubyImage, 25, 25 + 16 + 4, observer);
-			g.drawImage(clockImage, interfaces.getMinimap().getRealX() - 75, 25, observer);
-		} catch(IOException e) {
-			log(e.getMessage());
-		}
+		ImageObserver observer = null;
+		
+		g.drawImage(basketImage, 25, 25, observer);
+		g.drawImage(rubyImage, 25, 25 + 16 + 4, observer);
+		g.drawImage(clockImage, interfaces.getMinimap().getRealX() - 75, 25, observer);
 		
 		return ;
 	}
