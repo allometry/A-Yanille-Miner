@@ -73,7 +73,7 @@ public class AYanilleMiner extends Script {
 			"TknOeY9dlIw5kVcrMG/8XpoQgCEkOhwNNJn5i7bFSrFDpsCrFEIPpLacr0WxpibYIQpS86/8pMBqNswnJ6XSivqHBv3R3pmbxzgwz" +
 			"4Z+EaTXtwqIogrzjxIJ4QVVV1UyihxgjFv3/K09Bu/lEkBgg5rLZH+fT5dvfn7iFAAAAAElFTkSuQmCC";
 	
-	Image basketImage, rubyImage, clockImage;
+	private Image basketImage, rubyImage, clockImage;
 	
 	public void onStart() {
 		startTime = System.currentTimeMillis();
