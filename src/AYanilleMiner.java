@@ -6,15 +6,12 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.ImageObserver;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Locale;
 
 import javax.imageio.ImageIO;
-
-import sun.misc.BASE64Decoder;
 
 import com.quirlion.script.Script;
 import com.quirlion.script.types.Area;
@@ -41,56 +38,15 @@ public class AYanilleMiner extends Script {
 	
 	private long startTime;
 	
-	private String basketPNG = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhc" +
-			"mUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIvSURBVDjLpZNPiBJRHMffG6aZHcd1RNaYSspxSbFkWTpIh+iwVEpsFC1EYO2hQ9BlDx" +
-			"067L1b0KVDRQUa3jzWEughiDDDZRXbDtauU5QV205R6jo6at+3lNShKdgHH77zm9/f994MHQwGZCuLI1tctgVKpZJQLBYluxj6ty3" +
-			"M3V+alfvNG1Efzy03XGT9e3vu+rkD9/5rAiTPiGI/2RvZNrrSkmWL52ReGNw9f+3hzD8LIHmC9M2M4pHI2upbEqD18tdPnwmzOWJl" +
-			"pi/fmrAtcMrfnld5k+gvdeKTrcXT07FJxVovMHuMtsiUv3/xjzOoVCo3Lcs6DEi32xVAIBKJ0MzCY3My6BN1XSeqqpKnperGiamDU" +
-			"i6Xa3U6nTemaRLoGodEy+v1hlEsjBdXBEGg+Xz+2fgORazVamclSSLVavXMnjGHlM1m78iy7Gi321dDoVAYRQK0UCiMU0pfN5vNXS" +
-			"hggH2gDud21gloeNahO6EfoSr4Iopi3TCMBS4aja40Go1vmOA9Ao7DsYgORx0ORxkadzqdS9AYdBn+uKIoTI9omsa28GTzO3iEBeM" +
-			"CHGyCIPQDdDd0lU0AaswG7L0X52QAHbs/uXkL6HD7twnKrIPL5Sqyjm63m00U93g8JdjHoC9QJIYCdfB8+CWmUqkuHKMI8rPThQah" +
-			"r8BeUEWwBt4BFZ33g0vJZPIQ/+s+kcCDDQSTn1c0BElD2HXj0Emv13tg+y/YrUQiITBNp9OdH302kDq15BFkAAAAAElFTkSuQmCC";
-	
-	private String rubyPNG = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmU" +
-			"AQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHiSURBVDjLzZPdS5NRHMf3Fwy67yYqepnzrSgJetEyl8s0GqvYEHLDFiGr4VwQZTcOpzfe" +
-			"VgQiCIJ4IWJUN+WNUhQqqAVjpg0c4vY8p7l89uLzfDpbV0FE4Y0HPpff7znf3+97TIBpJ5h2h4HxoNMlSUlEET0YEHrAL7Y77orCn" +
-			"dsi7/WIXGuryN64KbRrDrF1uTmZuXjJXTKQAqckw+tXMD0N8/MQjcLSEvq7tySHh1GGhkgPDqI+fUZ8YID44242z5zPpGtONxcNPv" +
-			"LiOUxMwOgoLC7C3ByMjaEHg8R9Pta8XhSPhw23m09NTXzp7SXqv4+oOhkvGlQYXYEPRiQM8jZWVymdqSl0h4M1u531xka+S5br6vj" +
-			"c08Oytx1RcSKhHqlylmYg8+6ReV/qT7phfBwSCZidxXC5SEqhKk1Um41YOMzXW15E+fGYcriy8rctFHzt5nxb2+R2KAQzM7CwgCGf" +
-			"LurryTQ0sNHXx4oUq2XHYsqhcusf15h1uc2a8/pkviv0y0DOIFNbS7a/n28dflRL9bpy0Gr9aw+2rrSYf9jsb3IPH2GMjFCIRFDuB" +
-			"ZB5NeVAWcs/FWnz3IW96VNno7lAJ5oUy7xaar/F+V9NFNU1Fpn3vcy7ktp39Oou/ws74Sc149q/X6rjygAAAABJRU5ErkJggg==";
-	
-	private String clockPNG = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcm" +
-			"UAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAMESURBVDjLXZNrSFNxGMYPgQQRfYv6EgR9kCgKohtFgRAVQUHQh24GQReqhViWlVYbZJl" +
-			"ZmZmombfVpJXTdHa3reM8uszmWpqnmQuX5drmLsdjenR7ev9DR3Xgd3h43+d5/pw/HA4AN9zITSPUhJ14R0xn87+h2ZzJvZVInJpz" +
-			"AQOXQOQMt+/5rvhMCLXv9Vjrt1rSXitmwj+Jua1+Ox+2HfGNdGf6yW8l5sUKPNVcRsiaPDA22Ahv6/7Ae/0aKdviQ0G7B/c6f8Zg+" +
-			"gbfh079Mjno0MhS58lflOsgEjh3BXc+bM/0DzbvDwj314znt/bjof0HdPw3FBq6kP+oCxVNfdDZvqPsrQmf6zdFRtyPJgbrFoqUTe" +
-			"S+FnPrekpmiC2lS+QcUx+qrf0wmFzodYfgC0nwhoYh9oegfdmLsmYXHj7JhV23erS7ZNYHyibGLiLtXsO19BoHSiwu6Ok09gwFg/g" +
-			"y8BO/STOkKFBk7EWh2YkLeh5Hy4Ws2B2w157iDvOpxw4UPRPRTSfL41FIsow7ZeXwUFF4dBQ1L96A/xLEFf1HMC/LxAt25PH+VN0H" +
-			"XH1gh2dEwdBoBGO0OKvW4L7hCdIvavBSsMIRVHCi0ArmZZl4wbYrz/yHSq1Ql9vQLylUEoE7GMal3OuxMG/7CO848N6n4HheK5iXZ" +
-			"eIFmy88Nu+8aYJG24G3ziB+0Ee7wwqemlvQ5w9hcAJwyUDtpwBOFLeBeVkmXpB0qlK9RV2HlLsCsvUivHRhQwoQjhCkA1TgJX1OK0" +
-			"JVzIN5WSZesPZ44XKia+P5BqSS4aq+BzZXABLdhyQrsJPOqv4MVcEbMA/zsky8gLHyYO7hI9laecOZWuzLfYXU2zzSblmQerMZqjw" +
-			"TknOeY9dlIw5kVcrMG/8XpoQgCEkOhwNNJn5i7bFSrFDpsCrFEIPpLacr0WxpibYIQpS86/8pMBqNswnJ6XSivqHBv3R3pmbxzgwz" +
-			"4Z+EaTXtwqIogrzjxIJ4QVVV1UyihxgjFv3/K09Bu/lEkBgg5rLZH+fT5dvfn7iFAAAAAElFTkSuQmCC";
-	
 	private Image basketImage, rubyImage, clockImage;
 	
 	public void onStart() {
 		startTime = System.currentTimeMillis();
 		
 		try {
-			byte[] basketBytes = new BASE64Decoder().decodeBuffer(basketPNG);
-			byte[] rubyBytes = new BASE64Decoder().decodeBuffer(rubyPNG);
-			byte[] clockBytes = new BASE64Decoder().decodeBuffer(clockPNG);
-			
-			InputStream stream = new ByteArrayInputStream(basketBytes);
-			basketImage = ImageIO.read(stream);
-			
-			stream = new ByteArrayInputStream(rubyBytes);
-			rubyImage = ImageIO.read(stream);
-			
-			stream = new ByteArrayInputStream(clockBytes);
-			clockImage = ImageIO.read(stream);
+			basketImage = ImageIO.read(new URL("http://scripts.allometry.com/icons/basket.png"));
+			rubyImage = ImageIO.read(new URL("http://scripts.allometry.com/icons/ruby.png"));
+			clockImage = ImageIO.read(new URL("http://scripts.allometry.com/icons/clock.png"));
 		} catch(IOException e) {}
 	}
 	
@@ -158,7 +114,7 @@ public class AYanilleMiner extends Script {
 		return true;
 	}
 	
-	public void chatMessageReceived(String username, String message) {		
+	public void serverMessageReceived(String message) {		
 		if(message.contains("iron")) minedIron++;
 		if(message.contains("sapphire")) minedGems++;
 		if(message.contains("emerald")) minedGems++;
