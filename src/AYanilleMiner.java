@@ -121,9 +121,9 @@ public class AYanilleMiner extends Script {
 		startTime = System.currentTimeMillis();
 
 		try {
-			basketImage = ImageIO.read(new URL("http://scripts.allometry.com/icons/basket.png"));
-			rubyImage = ImageIO.read(new URL("http://scripts.allometry.com/icons/ruby.png"));
-			clockImage = ImageIO.read(new URL("http://scripts.allometry.com/icons/clock.png"));
+			basketImage = ImageIO.read(new URL("http://scripts.allometry.com/app/webroot/icons/basket.png"));
+			rubyImage = ImageIO.read(new URL("http://scripts.allometry.com/app/webroot/icons/ruby.png"));
+			clockImage = ImageIO.read(new URL("http://scripts.allometry.com/app/webroot/icons/clock.png"));
 		} catch (IOException e) {
 			logStackTrace(e);
 		}
